@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.conf.urls import url
 # from django.contrib import admin
+from readgood.views import BookList
 
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
+    url(r'^books/$', BookList.as_view(), name='books'),
 ]
