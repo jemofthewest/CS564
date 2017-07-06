@@ -3,20 +3,22 @@
 {% block content %}
 <ul>
     {% if book_list %}
-        <table id="books" class="table table-striped table-bordered table-hover">
-            <tr>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Publisher</th>
-            </tr>
-            {% for book in book_list %}
+        <div class="table-responsive">
+            <table id="books" class="table table-striped table-bordered table-hover">
                 <tr>
-                    <td>{{ book.title }}</td>
-                    <td>{{ book.author }}</td>
-                    <td>{{ book.publisher }}</td>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Publisher</th>
                 </tr>
-            {% endfor %}
-        </table>
+                {% for book in book_list %}
+                    <tr>
+                        <td>{{ book.title }}</td>
+                        <td>{{ book.author }}</td>
+                        <td>{{ book.publisher }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
 
         {% if is_paginated %}
             <nav aria-label="Page navigation">
