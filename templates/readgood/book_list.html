@@ -6,12 +6,16 @@
         <div class="table-responsive">
             <table id="books" class="table table-striped table-bordered table-hover">
                 <tr>
+                    <th></th>
                     <th>Title</th>
                     <th>Author</th>
                     <th>Publisher</th>
                 </tr>
                 {% for book in book_list %}
                     <tr>
+                        <td><a href="{{ book.image_url_l }}">
+                            <img src="{{ book.image_url_s }}" alt="{{ book.title }}"/>
+                        </a></td>
                         <td>{{ book.title }}</td>
                         <td>{{ book.author }}</td>
                         <td>{{ book.publisher }}</td>
