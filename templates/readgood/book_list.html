@@ -1,5 +1,9 @@
 {% extends 'generic_list.html' %}
 
+{% block title %}
+    Books
+{% endblock %}
+
 {% block table_id %}
     books
 {% endblock %}
@@ -30,4 +34,8 @@
 
 {% block view_url_next %}
     {% url 'books' %}
+{% endblock %}
+
+{% block none_found %}
+    <p>No books found.</p>
 {% endblock %}
