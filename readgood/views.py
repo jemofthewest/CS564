@@ -19,3 +19,9 @@ class AuthorList(ListView):
     template_name = 'readgood/author_list.html'
     queryset = Book.objects.values('author')
     paginate_by = 25
+
+
+class PublisherList(ListView):
+    template_name = 'readgood/publisher_list.html'
+    queryset = Book.objects.values('publisher')
+    paginate_by = 25

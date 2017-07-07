@@ -16,11 +16,12 @@ Including another URLconf
 from django.conf.urls import url
 
 # from django.contrib import admin
-from readgood.views import BookList, index, AuthorList
+from readgood.views import BookList, index, AuthorList, PublisherList
 
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
     url(r'^$', index, name='index'),
     url(r'^books/$', BookList.as_view(), name='books'),
     url(r'^authors/$', AuthorList.as_view(), name='authors'),
+    url(r'^publishers/$', PublisherList.as_view(), name='publishers'),
 ]

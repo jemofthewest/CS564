@@ -1,0 +1,37 @@
+{% extends 'generic_list.html' %}
+
+{% block title %}
+    Publishers
+{% endblock %}
+
+{% block table_id %}
+    publishers
+{% endblock %}
+
+{% block table_header %}
+    <th>Publisher</th>
+    <th>Books published</th>
+    <th>Prolific Author</th>
+{% endblock %}
+
+{% block table_rows %}
+    {% for publisher in object_list %}
+        <tr>
+            <td>{{ publisher.publisher }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+    {% endfor %}
+{% endblock %}
+
+{% block view_url_prev %}
+    {% url 'publishers' %}
+{% endblock %}
+
+{% block view_url_next %}
+    {% url 'publishers' %}
+{% endblock %}
+
+{% block none_found %}
+    <p>No publishers found.</p>
+{% endblock %}
