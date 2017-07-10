@@ -21,7 +21,7 @@
             <td><a href="{{ book.image_url_l }}">
                 <img src="{{ book.image_url_s }}" alt="{{ book.title }}"/>
             </a></td>
-            <td><a href="{% url 'book_pk' pk=book.isbn %}">{{ book.title }}</a></td>
+            <td><a href="{{ book.get_absolute_url }}">{{ book.title }}</a></td>
             <td>{{ book.author }}</td>
             <td>{{ book.publisher }}</td>
         </tr>

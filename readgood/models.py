@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 
 # Create your models here.
@@ -12,6 +13,9 @@ class Book(models.Model):
     image_url_m = models.URLField(blank=True, null=True)
     image_url_l = models.URLField(blank=True, null=True)
     slug = models.SlugField(max_length=255)
+
+    def get_absolute_url(self):
+        return reverse('book_slug', kwargs={'slug': self.slug})
 
     def __str__(self):
         return self.title

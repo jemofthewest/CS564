@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^$', index, name='index'),
     url(r'^books/$', BookList.as_view(), name='books'),
     url(r'^book/(?P<pk>[0-9]+X?)/$', BookDetail.as_view(), name='book_pk'),
+    url(r'^book/(?P<slug>[-\w]+)$', BookDetail.as_view(), name='book_slug'),
     url(r'^authors/$', AuthorList.as_view(), name='authors'),
     url(r'^publishers/$', PublisherList.as_view(), name='publishers'),
 ]
