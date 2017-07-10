@@ -2,6 +2,7 @@
 
 {% block content %}
     <h1>{{ object.title }}</h1>
+    <a href="{{ object.image_url_l }}"><img src="{{ object.image_url_m }}" alt="{{ object.title }} cover"/></a>
     <p>Author: {{ object.author }}</p>
     <p>Publisher: {{ object.publisher }}</p>
 {% endblock %}
