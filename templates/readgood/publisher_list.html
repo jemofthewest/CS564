@@ -17,7 +17,7 @@
 {% block table_rows %}
     {% for publisher in object_list %}
         <tr>
-            <td>{{ publisher.publisher }}</td>
+            <td><a href="{{ publisher.get_absolute_url }}">{{ publisher.name }}</a></td>
             <td></td>
             <td></td>
         </tr>

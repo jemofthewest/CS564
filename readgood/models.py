@@ -25,6 +25,9 @@ class Author(models.Model):
     name = models.CharField(primary_key=True, max_length=255)
     slug = models.SlugField(max_length=255)
 
+    def get_absolute_url(self):
+        return reverse('author_detail', kwargs={'slug': self.slug})
+
     def __str__(self):
         return self.name
 
@@ -32,6 +35,9 @@ class Author(models.Model):
 class Publisher(models.Model):
     name = models.CharField(primary_key=True, max_length=255)
     slug = models.SlugField(max_length=255)
+
+    def get_absolute_url(self):
+        return reverse('publisher_detail', kwargs={'slug': self.slug})
 
     def __str__(self):
         return self.name
