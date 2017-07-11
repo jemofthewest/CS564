@@ -13,6 +13,7 @@
             </div>
 
             {% if is_paginated %}
+                <div class="row">
                 <nav aria-label="Page navigation">
                     <ul class="pager">
                         {% if page_obj.has_previous %}
@@ -33,6 +34,7 @@
                         </li>
                     </ul>
                 </nav>
+                </div>
             {% endif %}
         {% else %}
             {% block none_found %}

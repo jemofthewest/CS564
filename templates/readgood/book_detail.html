@@ -1,8 +1,15 @@
 {% extends 'base_generic.html' %}
 
 {% block content %}
-    <h1>{{ object.title }}</h1>
-    <a href="{{ object.image_url_l }}"><img src="{{ object.image_url_m }}" alt="{{ object.title }} cover"/></a>
-    <p>Author: {{ object.author }}</p>
-    <p>Publisher: {{ object.publisher }}</p>
+    <div class="col-xs-2">
+        <a href="{{ object.image_url_l }}"><img src="{{ object.image_url_m }}" alt="{{ object.title }} cover"/></a>
+    </div>
+    <div class="col-xs-8">
+        <div class="page-header">
+            <h1>{{ object.title }}
+                <small>by {{ object.author }}</small>
+            </h1>
+        </div>
+        <p>Publisher: {{ object.publisher }}</p>
+    </div>
 {% endblock %}
