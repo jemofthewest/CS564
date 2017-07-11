@@ -1,0 +1,14 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>{{ object.name }}</h1>
+    </div>
+
+    <ul class="list-group">
+        {% for book in book_list %}
+            <li class="list-group-item">{{ book.title }}</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

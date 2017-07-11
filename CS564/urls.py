@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 
 # from django.contrib import admin
-from readgood.views import BookList, BookDetail, index, AuthorList, PublisherList
+from readgood.views import *
 
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
@@ -25,5 +25,7 @@ urlpatterns = [
     url(r'^book/(?P<pk>[0-9]+X?)/$', BookDetail.as_view(), name='book_pk'),
     url(r'^book/(?P<slug>[-\w]+)$', BookDetail.as_view(), name='book_slug'),
     url(r'^authors/$', AuthorList.as_view(), name='authors'),
+    url(r'^author/(?P<slug>[-\w]+)$', AuthorDetail.as_view(), name='author_detail'),
     url(r'^publishers/$', PublisherList.as_view(), name='publishers'),
+    url(r'^publisher/(?P<slug>[-\w]+)$', PublisherDetail.as_view(), name='publisher_detail'),
 ]

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 
-from readgood.models import Book
+from readgood.models import Book, Author, Publisher
 
 
 # Create your views here.
@@ -11,8 +11,8 @@ def index(request):
 
 class BookList(ListView):
     template_name = 'readgood/book_list.html'
-    queryset = Book.objects.all().order_by('title')
     paginate_by = 25
+    model = Book
 
 
 class BookDetail(DetailView):
@@ -21,11 +21,29 @@ class BookDetail(DetailView):
 
 class AuthorList(ListView):
     template_name = 'readgood/author_list.html'
-    queryset = Book.objects.values('author')
+    model = Author
     paginate_by = 25
+
+
+class AuthorDetail(DetailView):
+    model = Author
+
+    def get_context_data(self, **kwargs):
+        context = super(AuthorDetail, self).get_context_data(**kwargs)
+        context['book_list'] = self.object.book_set.all()
+        return context
 
 
 class PublisherList(ListView):
     template_name = 'readgood/publisher_list.html'
-    queryset = Book.objects.values('publisher')
+    model = Publisher
     paginate_by = 25
+
+
+class PublisherDetail(DetailView):
+    model = Publisher
+
+    def get_context_data(self, **kwargs):
+        context = super(PublisherDetail, self).get_context_data(**kwargs)
+        context['book_list'] = self.object.book_set.all()
+        return context
