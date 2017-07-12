@@ -1,41 +1,35 @@
-{% extends 'list_generic.html' %}
+{% extends 'base_generic.html' %}
 
-{% block title %}
-    Books
-{% endblock %}
+{% block content %}
+    <script>
+        $(document).ready(function () {
+            $('#books_table').DataTable({
+                "serverSide": true,
+                "ajax": "{% url 'search' %}",
+                "columns": [
+                    {"data": 'title'},
+                    {"data": 'author'},
+                    {"data": 'publisher'}
+                ]
+            });
+        })
+    </script>
 
-{% block table_id %}
-    books
-{% endblock %}
-
-{% block table_header %}
-    <th></th>
-    <th>Title</th>
-    <th>Author</th>
-    <th>Publisher</th>
-{% endblock %}
-
-{% block table_rows %}
-    {% for book in object_list %}
+    <table id="books_table" class="display">
+        <thead>
         <tr>
-            <td><a href="{{ book.image_url_l }}">
-                <img src="{{ book.image_url_s }}" alt="{{ book.title }}"/>
-            </a></td>
-            <td><a href="{{ book.get_absolute_url }}">{{ book.title }}</a></td>
-            <td><a href="{{ book.author.get_absolute_url }}">{{ book.author }}</a></td>
-            <td><a href="{{ book.publisher.get_absolute_url }}">{{ book.publisher }}</a></td>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Publisher</th>
         </tr>
-    {% endfor %}
-{% endblock %}
+        </thead>
+        <tfoot>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Publisher</th>
+        </tr>
+        </tfoot>
+    </table>
 
-{% block view_url_prev %}
-    {% url 'books' %}
-{% endblock %}
-
-{% block view_url_next %}
-    {% url 'books' %}
-{% endblock %}
-
-{% block none_found %}
-    <p>No books found.</p>
 {% endblock %}
