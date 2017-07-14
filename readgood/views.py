@@ -11,12 +11,18 @@ def index(request):
 
 
 def search(request):
+    #  Grab parameters
     draw = int(request.GET['draw'])
     start = int(request.GET['start'])
     length = int(request.GET['length'])
     end = start + length
 
-    books = Book.objects.all()
+    #  As far as I can tell, I need to do this because the way DataTables sends data does not cooperate with the way
+    #  Django accepts data.
+    col_param = 'columns[' + request.GET['order[0][column]'] + '][data]'
+    ord_column = request.GET[col_param]
+
+    books = Book.objects.all().order_by(ord_column)
     data = books[start:end]
     total = books.count()
 
@@ -24,6 +30,7 @@ def search(request):
         'draw': draw,
         'recordsTotal': total,
         'recordsFiltered': total,
+        #  TODO: remove values, make generic. Might mean handling dicts
         'data': list(data.values('title', 'author', 'publisher'))
     }
 

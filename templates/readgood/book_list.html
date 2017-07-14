@@ -6,6 +6,7 @@
             $('#books_table').DataTable({
                 "serverSide": true,
                 "ajax": "{% url 'search' %}",
+                "orderMulti": false,
                 "columns": [
                     {"data": 'title'},
                     {"data": 'author'},
