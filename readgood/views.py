@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
@@ -21,8 +22,13 @@ def search(request):
     #  Django accepts data.
     col_param = 'columns[' + request.GET['order[0][column]'] + '][data]'
     ord_column = request.GET[col_param]
+    search_key = request.GET["search[value]"]
 
     books = Book.objects.all().order_by(ord_column)
+    if search_key:
+        books = books.filter(Q(title__icontains=search_key)
+                             | Q(author__name__icontains=search_key)
+                             | Q(publisher__name__icontains=search_key))
     data = books[start:end]
     total = books.count()
 
@@ -52,8 +58,10 @@ class BookDetail(DetailView):
 class AuthorList(ListView):
     template_name = 'readgood/author_list.html'
     model = Author
-    # TODO: queryset = Book.objects.value_list('author') # returns just the names
     paginate_by = 25
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
 
 
 class AuthorDetail(DetailView):
