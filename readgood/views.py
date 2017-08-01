@@ -1,9 +1,14 @@
+from django.db.models import Avg
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.urls import reverse
+from django.views import View
+from django.views.generic import ListView, DetailView, FormView
+from django.views.generic.detail import SingleObjectMixin
 
-from readgood.models import Book, Author, Publisher
+from readgood.forms import AddBookForm
+from readgood.models import Book, Author, Publisher, BooksRead, BooksToRead
 
 
 # Create your views here.
@@ -24,7 +29,8 @@ def search(request):
     ord_column = request.GET[col_param]
     search_key = request.GET["search[value]"]
 
-    books = Book.objects.all().order_by(ord_column)
+    books = Book.objects.all()
+    books = books.order_by(ord_column)
     if search_key:
         books = books.filter(Q(title__icontains=search_key)
                              | Q(author__name__icontains=search_key)
@@ -51,8 +57,57 @@ class BookList(ListView):
     # TODO: self.request.GET.get('publisher')
 
 
-class BookDetail(DetailView):
+class BookDetail(View):
+    def get(self, request, *args, **kwargs):
+        view = BookDisplay.as_view()
+        return view(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        view = AddBook.as_view()
+        return view(request, *args, **kwargs)
+
+
+class BookDisplay(DetailView):
     model = Book
+
+    def get_context_data(self, **kwargs):
+        context = super(BookDisplay, self).get_context_data(**kwargs)
+        context['form'] = AddBookForm()
+        context['read'] = self.object.booksread_set.filter(user_id=self.request.user.id).exists()
+        context['to_read'] = self.object.bookstoread_set.filter(user_id=self.request.user.id).exists()
+        return context
+
+
+class AddBook(SingleObjectMixin, FormView):
+    template_name = 'readgood/book_detail.html'
+    form_class = AddBookForm
+    model = Book
+    success_message = "Book added successfully"
+
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated():
+            return HttpResponseForbidden()
+        self.object = self.get_object()
+        return super(AddBook, self).post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        toread = self.object.bookstoread_set.filter(book_id=self.object.isbn, user_id=self.request.user.id)
+        read = self.object.booksread_set.filter(book_id=self.object.isbn, user_id=self.request.user.id)
+
+        if 'read' in form.data:
+            b = BooksRead(book_id=self.object.isbn, user_id=self.request.user.id)
+            b.save()
+            if toread.exists():
+                toread.delete()
+        elif 'to-read' in form.data:
+            b = BooksToRead(book_id=self.object.isbn, user_id=self.request.user.id)
+            b.save()
+            if read.exists():
+                read.delete()
+        return super(AddBook, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('book_pk', kwargs={'pk': self.object.pk})
 
 
 class AuthorList(ListView):
@@ -60,16 +115,15 @@ class AuthorList(ListView):
     model = Author
     paginate_by = 25
 
-    def get_context_data(self, **kwargs):
-        return super().get_context_data(**kwargs)
-
 
 class AuthorDetail(DetailView):
     model = Author
 
     def get_context_data(self, **kwargs):
         context = super(AuthorDetail, self).get_context_data(**kwargs)
-        context['book_list'] = self.object.book_set.all()
+        booklist = self.object.book_set
+        context['book_list'] = booklist.all()
+        context['avg_rating'] = booklist.aggregate(Avg('rating__rating'))['rating__rating__avg']
         return context
 
 
