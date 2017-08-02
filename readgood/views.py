@@ -1,5 +1,5 @@
-from django.db.models import Avg
-from django.db.models import Q
+from django.contrib.auth.models import User
+from django.db.models import Avg, Q
 from django.http import JsonResponse, HttpResponseForbidden
 from django.shortcuts import render
 from django.urls import reverse
@@ -139,4 +139,15 @@ class PublisherDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super(PublisherDetail, self).get_context_data(**kwargs)
         context['book_list'] = self.object.book_set.all()
+        return context
+
+
+class UserDetail(DetailView):
+    model = User
+
+    def get_context_data(self, **kwargs):
+        context = super(UserDetail, self).get_context_data(**kwargs)
+        context['to_read'] = self.object.bookstoread_set.all()
+        context['read'] = self.object.booksread_set.all()
+        context['ratings'] = self.object.rating_set.all()
         return context

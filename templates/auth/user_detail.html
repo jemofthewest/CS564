@@ -1,0 +1,35 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>{{ object.id }}</h1>
+    </div>
+
+    <ul class="list-group">
+        {% for book in to_read %}
+            <li class="list-group-item"><a href="{{ book.book.get_absolute_url }}">{{ book.book.title }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <ul class="list-group">
+        {% for book in read %}
+            <li class="list-group-item"><a href="{{ book.book.get_absolute_url }}">{{ book.book.title }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <div class="table-responsive">
+        <table id="ratings" class="table table-bordered">
+            <tr>
+                <th>ISBN</th>
+                <th>Rating</th>
+            </tr>
+            {% for rating in ratings %}
+                <tr>
+                    <td><a href="{{ rating.book.get_absolute_url }}">{{ rating.book.title }}</a></td>
+                    <td>{{ rating.rating }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+{% endblock %}

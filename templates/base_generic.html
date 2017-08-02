@@ -28,6 +28,11 @@
                     <li><a href="{% url 'books' %}">All books</a></li>
                     <li><a href="{% url 'authors' %}">All authors</a></li>
                     <li><a href="{% url 'publishers' %}">All publishers</a></li>
+                    {% with user_url=user.get_absolute_url %}
+                        {% if user.is_authenticated %}
+                            <li><a href="{{ user_url }}">My page</a></li>
+                        {% endif %}
+                    {% endwith %}
                 </ul>
             {% endblock %}
         </div>

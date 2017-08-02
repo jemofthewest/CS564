@@ -29,5 +29,6 @@ urlpatterns = [
     url(r'^author/(?P<slug>[-\w]+)$', AuthorDetail.as_view(), name='author_detail'),
     url(r'^publishers/$', PublisherList.as_view(), name='publishers'),
     url(r'^publisher/(?P<slug>[-\w]+)$', PublisherDetail.as_view(), name='publisher_detail'),
+    url(r'^users/(?P<pk>[0-9]+X?)/$', UserDetail.as_view(), name='user_detail'),
     url(r'^search/$', search, name='search'),
 ]
