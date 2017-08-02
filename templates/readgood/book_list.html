@@ -8,6 +8,11 @@
                 "ajax": "{% url 'search' %}",
                 "orderMulti": false,
                 "columns": [
+                    {
+                        "data": 'isbn', "render": function (data, type, full, meta) {
+                        return '<a href="/book/' + data + '/">' + data + '</a>'
+                    }
+                    },
                     {"data": 'title'},
                     {"data": 'author'},
                     {"data": 'publisher'}
@@ -19,6 +24,7 @@
     <table id="books_table" class="display table">
         <thead>
         <tr>
+            <th>ISBN</th>
             <th>Title</th>
             <th>Author</th>
             <th>Publisher</th>
@@ -26,6 +32,7 @@
         </thead>
         <tfoot>
         <tr>
+            <th>ISBN</th>
             <th>Title</th>
             <th>Author</th>
             <th>Publisher</th>

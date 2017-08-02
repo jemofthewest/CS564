@@ -43,7 +43,7 @@ def search(request):
         'recordsTotal': total,
         'recordsFiltered': total,
         #  TODO: remove values, make generic. Might mean handling dicts
-        'data': list(data.values('title', 'author', 'publisher'))
+        'data': list(data.values('isbn', 'title', 'author', 'publisher'))
     }
 
     return JsonResponse(response)
