@@ -1,14 +1,12 @@
-from django.contrib.auth.models import User
 from django.db.models import Avg, Q
 from django.http import JsonResponse, HttpResponseForbidden
 from django.shortcuts import render
-from django.urls import reverse
 from django.views import View
 from django.views.generic import ListView, DetailView, FormView
 from django.views.generic.detail import SingleObjectMixin
 
 from readgood.forms import AddBookForm
-from readgood.models import Book, Author, Publisher, BooksRead, BooksToRead
+from readgood.models import *
 
 
 # Create your views here.
@@ -54,8 +52,6 @@ class BookList(ListView):
     paginate_by = 25
     model = Book
 
-    # TODO: self.request.GET.get('publisher')
-
 
 class BookDetail(View):
     def get(self, request, *args, **kwargs):
@@ -91,19 +87,44 @@ class AddBook(SingleObjectMixin, FormView):
         return super(AddBook, self).post(request, *args, **kwargs)
 
     def form_valid(self, form):
-        toread = self.object.bookstoread_set.filter(book_id=self.object.isbn, user_id=self.request.user.id)
-        read = self.object.booksread_set.filter(book_id=self.object.isbn, user_id=self.request.user.id)
+        isbn = self.object.isbn
+        user_id = self.request.user.id
+        toread = self.object.bookstoread_set.filter(book_id=isbn, user_id=user_id)
+        read = self.object.booksread_set.filter(book_id=isbn, user_id=user_id)
 
-        if 'read' in form.data:
-            b = BooksRead(book_id=self.object.isbn, user_id=self.request.user.id)
+        book_list = form.data.get('book_list')
+        if book_list == 'read':
+            (b, _) = BooksRead.objects.get_or_create(book_id=isbn, user_id=user_id)
             b.save()
             if toread.exists():
                 toread.delete()
-        elif 'to-read' in form.data:
-            b = BooksToRead(book_id=self.object.isbn, user_id=self.request.user.id)
+        elif book_list == 'to-read':
+            (b, _) = BooksToRead.objects.get_or_create(book_id=isbn, user_id=user_id)
             b.save()
             if read.exists():
                 read.delete()
+        else:
+            if toread.exists():
+                toread.delete()
+            if read.exists():
+                read.delete()
+
+        if 'favorite' in form.data:
+            (p, _) = Profile.objects.get_or_create(user_id=user_id)
+            p.favorite_book_id = isbn
+            p.save()
+
+        rating = form.data.get('rating')
+
+        if rating:
+            r = Rating.objects.filter(book_id=isbn, user_id=user_id)
+            if r.exists():
+                r.update(rating=rating)
+                r[0].save()
+            else:
+                r = Rating(book_id=isbn, user_id=user_id, rating=rating)
+                r.save()
+
         return super(AddBook, self).form_valid(form)
 
     def get_success_url(self):
@@ -150,4 +171,21 @@ class UserDetail(DetailView):
         context['to_read'] = self.object.bookstoread_set.all()
         context['read'] = self.object.booksread_set.all()
         context['ratings'] = self.object.rating_set.all()
+
+        recommended_books = Book.objects.raw('select readgood_book.isbn from readgood_rating '
+                                             'inner join readgood_book on readgood_rating.book_id = readgood_book.isbn '
+                                             'where user_id in '
+                                             '(select other_users.user_id from '
+                                             '(select book_id from readgood_rating '
+                                             'where user_id = %s and rating = 10) as favorite_books '
+                                             'inner join readgood_rating as other_users on favorite_books.book_id = other_users.book_id '
+                                             'where other_users.rating = 10 and other_users.user_id <> %s) '
+                                             'and rating = 10 '
+                                             'and book_id not in '
+                                             '(select book_id from readgood_rating '
+                                             'where user_id = %s) '
+                                             'group by book_id '
+                                             'ORDER BY count(*) desc '
+                                             'LIMIT 10' % (self.object.id, self.object.id, self.object.id))
+        context['recommend'] = recommended_books
         return context

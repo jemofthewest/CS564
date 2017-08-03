@@ -5,18 +5,29 @@
         <h1>{{ object.id }}</h1>
     </div>
 
+    <h2>Recommended Books</h2>
+    <ul class="list-group">
+        {% for book in recommend %}
+            <li class="list-group-item"><a href="{{ book.book.get_absolute_url }}">{{ book.title }}</a></li>
+        {% endfor %}
+    </ul>
+
+
+    <h2>To Read</h2>
     <ul class="list-group">
         {% for book in to_read %}
             <li class="list-group-item"><a href="{{ book.book.get_absolute_url }}">{{ book.book.title }}</a></li>
         {% endfor %}
     </ul>
 
+    <h2>Have Read</h2>
     <ul class="list-group">
         {% for book in read %}
             <li class="list-group-item"><a href="{{ book.book.get_absolute_url }}">{{ book.book.title }}</a></li>
         {% endfor %}
     </ul>
 
+    <h2>Ratings</h2>
     <div class="table-responsive">
         <table id="ratings" class="table table-bordered">
             <tr>

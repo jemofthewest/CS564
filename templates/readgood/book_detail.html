@@ -26,9 +26,8 @@
     <div class="row">
         <form action="{% url "book_pk" pk=object.isbn %}" method="post">
             {% csrf_token %}
-            {{ form }}
-            {% if not read %}<input type="submit" name="read" value="Have Read"/>{% endif %}
-            {% if not to_read %}<input type="submit" name="to-read" value="To Read"/>{% endif %}
+            {{ form.as_ul }}
+            <input type="submit" value="Save">
         </form>
     </div>
 {% endblock %}
