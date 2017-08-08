@@ -1,4 +1,4 @@
-from django.db.models import Avg, Q
+from django.db.models import Avg, Q, Count
 from django.http import JsonResponse, HttpResponseForbidden
 from django.shortcuts import render
 from django.views import View
@@ -63,6 +63,7 @@ class BookDetail(View):
         return view(request, *args, **kwargs)
 
 
+# Override get_object?
 class BookDisplay(DetailView):
     model = Book
 
@@ -71,6 +72,7 @@ class BookDisplay(DetailView):
         context['form'] = AddBookForm()
         context['read'] = self.object.booksread_set.filter(user_id=self.request.user.id).exists()
         context['to_read'] = self.object.bookstoread_set.filter(user_id=self.request.user.id).exists()
+        context['avg_rating'] = self.object.rating_set.aggregate(Avg('rating'))['rating__avg']
         return context
 
 
@@ -135,6 +137,11 @@ class AuthorList(ListView):
     template_name = 'readgood/author_list.html'
     model = Author
     paginate_by = 25
+
+    def get_queryset(self):
+        qset = super(AuthorList, self).get_queryset().annotate(num_books=Count('book'),
+                                                               avg_rating=Avg('book__rating__rating'))
+        return qset
 
 
 class AuthorDetail(DetailView):
