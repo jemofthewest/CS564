@@ -23,14 +23,16 @@
         </div>
     </div>
 
+    <a class="btn btn-default" href="{% url 'admin:readgood_book_change' object.isbn %}">Modify</a>
+
     <p>Average rating: {{ avg_rating }}</p>
 
     <h2>Update information</h2>
-    <div class="row">
+    <div class="form-group">
         <form action="{% url "book_pk" pk=object.isbn %}" method="post">
             {% csrf_token %}
             {{ form.as_ul }}
-            <input type="submit" value="Save">
+            <input class="btn btn-default" type="submit" value="Save">
         </form>
     </div>
 {% endblock %}
