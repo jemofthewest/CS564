@@ -9,7 +9,7 @@
                 "orderMulti": false,
                 "columns": [
                     {
-                        "data": 'isbn', "render": function (data, type, full, meta) {
+                        "data": 'isbn', "orderable": false, "render": function (data, type, full, meta) {
                         return '<a href="/book/' + data + '/">' + data + '</a>'
                     }
                     },
