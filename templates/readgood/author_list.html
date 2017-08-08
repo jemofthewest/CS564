@@ -18,8 +18,8 @@
     {% for author in object_list %}
         <tr>
             <td><a href="{{ author.get_absolute_url }}">{{ author.name }}</a></td>
-            <td></td>
-            <td></td>
+            <td>{{ author.num_books }}</td>
+            <td>{{ author.avg_rating }}</td>
         </tr>
     {% endfor %}
 {% endblock %}
