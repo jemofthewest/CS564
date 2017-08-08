@@ -21,6 +21,9 @@ class Book(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        ordering = ["title"]
+
 
 class Author(models.Model):
     name = models.CharField(primary_key=True, max_length=255)
