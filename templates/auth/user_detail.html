@@ -8,7 +8,7 @@
     <h2>Recommended Books</h2>
     <ul class="list-group">
         {% for book in recommend %}
-            <li class="list-group-item"><a href="{{ book.book.get_absolute_url }}">{{ book.title }}</a></li>
+            <li class="list-group-item"><a href="{{ book.get_absolute_url }}">{{ book.title }}</a></li>
         {% endfor %}
     </ul>
 
